@@ -12,6 +12,7 @@ export interface IFindBookByIdResult {
   rank: number | null;
   name: string | null;
   author_id: number | null;
+  r: number | null;
 }
 
 /** 'FindBookById' query type */
@@ -34,9 +35,9 @@ export const findBookById = new PreparedQuery<IFindBookByIdParams,IFindBookByIdR
 /** 'InsertBooks' parameters type */
 export interface IInsertBooksParams {
   books: Array<{
-    rank: number,
-    name: string,
-    authorId: number
+    rank: number | null | void,
+    name: string | null | void,
+    authorId: number | null | void
   }>;
 }
 
@@ -63,6 +64,71 @@ const insertBooksIR: any = {"name":"InsertBooks","params":[{"name":"books","code
 export const insertBooks = new PreparedQuery<IInsertBooksParams,IInsertBooksResult>(insertBooksIR);
 
 
+/** 'UpdateBooksCustom' parameters type */
+export interface IUpdateBooksCustomParams {
+  rank: number | null | void;
+  id: number | null | void;
+}
+
+/** 'UpdateBooksCustom' return type */
+export type IUpdateBooksCustomResult = void;
+
+/** 'UpdateBooksCustom' query type */
+export interface IUpdateBooksCustomQuery {
+  params: IUpdateBooksCustomParams;
+  result: IUpdateBooksCustomResult;
+}
+
+const updateBooksCustomIR: any = {"name":"UpdateBooksCustom","params":[{"name":"rank","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":305,"b":308,"line":17,"col":20},{"a":351,"b":354,"line":18,"col":23}]}},{"name":"id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":417,"b":418,"line":22,"col":12}]}}],"usedParamSet":{"rank":true,"id":true},"statement":{"body":"UPDATE books\nSET\n    rank = (\n        CASE WHEN (:rank::int IS NOT NULL)\n                 THEN :rank\n             ELSE rank\n            END\n        )\nWHERE id = :id","loc":{"a":255,"b":418,"line":14,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE books
+ * SET
+ *     rank = (
+ *         CASE WHEN (:rank::int IS NOT NULL)
+ *                  THEN :rank
+ *              ELSE rank
+ *             END
+ *         )
+ * WHERE id = :id
+ * ```
+ */
+export const updateBooksCustom = new PreparedQuery<IUpdateBooksCustomParams,IUpdateBooksCustomResult>(updateBooksCustomIR);
+
+
+/** 'UpdateBooks' parameters type */
+export interface IUpdateBooksParams {
+  name: string | null | void;
+  rank: number | null | void;
+  id: number | null | void;
+}
+
+/** 'UpdateBooks' return type */
+export type IUpdateBooksResult = void;
+
+/** 'UpdateBooks' query type */
+export interface IUpdateBooksQuery {
+  params: IUpdateBooksParams;
+  result: IUpdateBooksResult;
+}
+
+const updateBooksIR: any = {"name":"UpdateBooks","params":[{"name":"name","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":477,"b":480,"line":29,"col":12}]}},{"name":"rank","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":495,"b":498,"line":30,"col":12}]}},{"name":"id","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":512,"b":513,"line":31,"col":12}]}}],"usedParamSet":{"name":true,"rank":true,"id":true},"statement":{"body":"UPDATE books\nSET\n    name = :name,\n    rank = :rank\nWHERE id = :id","loc":{"a":448,"b":513,"line":27,"col":0}}};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * UPDATE books
+ * SET
+ *     name = :name,
+ *     rank = :rank
+ * WHERE id = :id
+ * ```
+ */
+export const updateBooks = new PreparedQuery<IUpdateBooksParams,IUpdateBooksResult>(updateBooksIR);
+
+
 /** 'GetBooksByAuthorName' parameters type */
 export interface IGetBooksByAuthorNameParams {
   authorName: string | null | void;
@@ -74,6 +140,7 @@ export interface IGetBooksByAuthorNameResult {
   rank: number | null;
   name: string | null;
   author_id: number | null;
+  r: number | null;
 }
 
 /** 'GetBooksByAuthorName' query type */
@@ -82,7 +149,7 @@ export interface IGetBooksByAuthorNameQuery {
   result: IGetBooksByAuthorNameResult;
 }
 
-const getBooksByAuthorNameIR: any = {"name":"GetBooksByAuthorName","params":[{"name":"authorName","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":368,"b":377,"line":15,"col":44}]}}],"usedParamSet":{"authorName":true},"statement":{"body":"SELECT b.* FROM books b\nINNER JOIN authors a ON a.id = b.author_id\nWHERE a.first_name || ' ' || a.last_name = :authorName","loc":{"a":257,"b":377,"line":13,"col":0}}};
+const getBooksByAuthorNameIR: any = {"name":"GetBooksByAuthorName","params":[{"name":"authorName","transform":{"type":"scalar"},"codeRefs":{"used":[{"a":662,"b":671,"line":37,"col":44}]}}],"usedParamSet":{"authorName":true},"statement":{"body":"SELECT b.* FROM books b\nINNER JOIN authors a ON a.id = b.author_id\nWHERE a.first_name || ' ' || a.last_name = :authorName","loc":{"a":551,"b":671,"line":35,"col":0}}};
 
 /**
  * Query generated from SQL:
